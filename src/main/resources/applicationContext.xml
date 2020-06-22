@@ -9,17 +9,20 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <context:property-placeholder location="dbConfig.properties"/>
+    <context:property-placeholder location="classpath:dbConfig.properties"/>
 
-    <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="comboPooledDataSource">
+    <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="comboPooledDataSource" destroy-method="close">
         <property name="user" value="${jdbc.user}"/>
         <property name="password" value="${jdbc.password}"/>
         <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
         <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"></property>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+
     </bean>
 
     <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
-        <property name="configLocation" value="mybatis-config.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
         <property name="dataSource" ref="comboPooledDataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
